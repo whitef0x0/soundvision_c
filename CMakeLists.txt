@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-project("pbcvt")
+project("soundvision_c")
 
 #----------------------------CMAKE & GLOBAL PROPERTIES-------------------------#
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -24,14 +24,14 @@ set_property(CACHE PYTHON_DESIRED_VERSION PROPERTY STRINGS ${PYTHON_OPTIONS})
 
 
 #=============== Find Packages 
-find_package(OpenCV COMPONENTS core REQUIRED)
+find_package(OpenCV COMPONENTS core videoio highgui REQUIRED)
 include("DetectPython")
 if (${PYTHON_DESIRED_VERSION} STREQUAL "2.X")
     set(Python_ADDITIONAL_VERSIONS ${PYTHON2_VERSION_MAJOR}.${PYTHON2_VERSION_MINOR})
     find_package(Boost COMPONENTS python-py${PYTHON2_VERSION_MAJOR}${PYTHON2_VERSION_MINOR} REQUIRED)
 else ()
     set(Python_ADDITIONAL_VERSIONS ${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR})
-    find_package(Boost COMPONENTS python-py${PYTHON3_VERSION_MAJOR}${PYTHON3_VERSION_MINOR} REQUIRED)
+    find_package(Boost COMPONENTS python REQUIRED)
 endif ()
 
 
@@ -41,13 +41,13 @@ if (${PYTHON_DESIRED_VERSION} STREQUAL "2.X")
     SET(PYTHON_LIBRARIES ${PYTHON2_LIBRARY})
     SET(PYTHON_EXECUTABLE ${PYTHON2_EXECUTABLE})
     SET(PYTHON_PACKAGES_PATH ${PYTHON2_PACKAGES_PATH})
-    SET(ARCHIVE_OUTPUT_NAME pbcvt_py2)
+    SET(ARCHIVE_OUTPUT_NAME soundvision_c_py2)
 else ()
     SET(PYTHON_INCLUDE_DIRS ${PYTHON3_INCLUDE_DIR} ${PYTHON3_INCLUDE_DIR2} ${PYTHON3_NUMPY_INCLUDE_DIRS})
     SET(PYTHON_LIBRARIES ${PYTHON3_LIBRARY})
     SET(PYTHON_EXECUTABLE ${PYTHON3_EXECUTABLE})
     SET(PYTHON_PACKAGES_PATH ${PYTHON3_PACKAGES_PATH})
-    SET(ARCHIVE_OUTPUT_NAME pbcvt_py3)
+    SET(ARCHIVE_OUTPUT_NAME soundvision_c_py3)
 endif ()
 
 file(GLOB project_sources ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
@@ -76,7 +76,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import distutils.sysconfig; pri
 set_target_properties(${PROJECT_NAME} PROPERTIES
         ARCHIVE_OUTPUT_NAME ${ARCHIVE_OUTPUT_NAME}  # prevent name conflict for python2/3 outputs
         PREFIX ""
-        OUTPUT_NAME pbcvt
+        OUTPUT_NAME soundvision_c
         SUFFIX ${${PROJECT_NAME}_PY_SUFFIX})
 
 if (MSVC AND NOT PYTHON_DEBUG_LIBRARIES)

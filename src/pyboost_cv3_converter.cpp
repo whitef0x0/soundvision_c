@@ -6,10 +6,10 @@
  *   Copyright: 2015 Gregory Kramida
  */
 #define NO_IMPORT_ARRAY
-#define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
+#define PY_ARRAY_UNIQUE_SYMBOL soundvision_c_ARRAY_API
 #include <pyboostcvconverter/pyboostcvconverter.hpp>
 #if CV_VERSION_MAJOR == 3
-namespace pbcvt {
+namespace soundvision_c {
 using namespace cv;
 //===================   ERROR HANDLING     =========================================================
 
@@ -423,5 +423,5 @@ void matFromNDArrayBoostConverter::construct(PyObject* object,
 	data->convertible = storage;
 }
 
-}			//end namespace pbcvt
+}			//end namespace soundvision_c
 #endif

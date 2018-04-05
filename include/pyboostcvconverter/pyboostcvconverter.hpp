@@ -17,7 +17,7 @@
 #include <boost/python.hpp>
 #include <cstdio>
 
-namespace pbcvt{
+namespace soundvision_c {
 
 using namespace cv;
 
@@ -87,5 +87,5 @@ struct matFromNDArrayBoostConverter {
 	static void construct(PyObject* object,
 			boost::python::converter::rvalue_from_python_stage1_data* data);
 };
-} // end namespace pbcvt
+} // end namespace soundvision_c
 #endif /* CVBOOSTCONVERTER_HPP_ */

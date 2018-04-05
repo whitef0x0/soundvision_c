@@ -20,10 +20,10 @@ Compiling & Trying Out Sample Code
 3. Build (run ```make``` on *nix systems with gcc/eclipse CDT generator from within the build folder)
 4. On *nix systems, ```make install``` run with root privileges will install the compiled library file. Alternatively, you can manually copy it to the pythonXX/dist-packages directory (replace XX with desired python version).
 5. Run python interpreter of your choice, issue 
-  1. import pbcvt; import numpy as np
+  1. import soundvision_c; import numpy as np
   2. a = np.array([[1.,2.],[3.,4.]]); b = np.array([[2.,2.],[4.,4.]])
-  3. pbcvt.dot(a,b)
-  4. pbcvt.dot2(a,b)
+  3. soundvision_c.dot(a,b)
+  4. soundvision_c.dot2(a,b)
 
 Usage
 ----------------
@@ -32,24 +32,24 @@ The header and the two source files need to be directly included in your project
 ```python
 
 import numpy
-import pbcvt # your module, also the name of your compiled dynamic library file w/o the extension
+import soundvision_c # your module, also the name of your compiled dynamic library file w/o the extension
 
 a = numpy.array([[1., 2., 3.]])
 b = numpy.array([[1.],
                  [2.],
                  [3.]])
-print(pbcvt.dot(a, b)) # should print [[14.]]
-print(pbcvt.dot2(a, b)) # should also print [[14.]]
+print(soundvision_c.dot(a, b)) # should print [[14.]]
+print(soundvision_c.dot2(a, b)) # should also print [[14.]]
 ```
-Here is the C++ code for the sample pbcvt.so module (python_module.cpp):
+Here is the C++ code for the sample soundvision_c.so module (python_module.cpp):
 
 ```c++
-#define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
+#define PY_ARRAY_UNIQUE_SYMBOL soundvision_c_ARRAY_API
 
 #include <boost/python.hpp>
 #include <pyboostcvconverter/pyboostcvconverter.hpp>
 
-namespace pbcvt {
+namespace soundvision_c {
 
     using namespace boost::python;
 
@@ -62,8 +62,8 @@ namespace pbcvt {
     PyObject *dot(PyObject *left, PyObject *right) {
 
         cv::Mat leftMat, rightMat;
-        leftMat = pbcvt::fromNDArrayToMat(left);
-        rightMat = pbcvt::fromNDArrayToMat(right);
+        leftMat = soundvision_c::fromNDArrayToMat(left);
+        rightMat = soundvision_c::fromNDArrayToMat(right);
         auto c1 = leftMat.cols, r2 = rightMat.rows;
         // Check that the 2-D matrices can be legally multiplied.
         if (c1 != r2) {
@@ -72,7 +72,7 @@ namespace pbcvt {
             throw_error_already_set();
         }
         cv::Mat result = leftMat * rightMat;
-        PyObject *ret = pbcvt::fromMatToNDArray(result);
+        PyObject *ret = soundvision_c::fromMatToNDArray(result);
         return ret;
     }
 
@@ -108,14 +108,14 @@ namespace pbcvt {
         return NUMPY_IMPORT_ARRAY_RETVAL;
     }
 
-    BOOST_PYTHON_MODULE (pbcvt) {
+    BOOST_PYTHON_MODULE (soundvision_c) {
         //using namespace XM;
         init_ar();
 
         //initialize converters
         to_python_converter<cv::Mat,
-                pbcvt::matToNDArrayBoostConverter>();
-        pbcvt::matFromNDArrayBoostConverter();
+                soundvision_c::matToNDArrayBoostConverter>();
+        soundvision_c::matFromNDArrayBoostConverter();
 
         //expose module-level functions
         def("dot", dot);
@@ -123,7 +123,7 @@ namespace pbcvt {
 
     }
 
-} //end namespace pbcvt
+} //end namespace soundvision_c
 ```
 
 Original code is based on [yati sagade's sample](https://github.com/yati-sagade/blog-content/blob/master/content/numpy-boost-python-opencv.rst) but has since been heavily revised and upgraded.
